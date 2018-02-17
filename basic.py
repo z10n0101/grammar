@@ -1,12 +1,16 @@
 import re
 
 
+class LetterException(Exception):
+    pass
+
+
 class Letter(object):
 
     letter_re = re.compile(r'^[a-zA-Z]$')
 
     def __init__(self, letter):
-        if letter_re.match(letter):
+        if self.letter_re.match(letter):
             if Vowel.is_vowel(letter):
                 self.letter = Vowel(letter)
             else:
@@ -24,7 +28,7 @@ class Vowel(object):
 
     @staticmethod
     def is_vowel(letter):
-        return letter in letters
+        return letter in Vowel.letters
 
 
 class Consonant(object):
@@ -44,16 +48,3 @@ class Word(object):
 
     def split_letters(self):
         pass
-
-class Rule(object):
-
-    @classmethod
-    def suffix_replace(word, suffixes, relpace):
-        for suffix in suffixes:
-            if word.lower().endswith(suffix):
-                return verb.__class__(word[:-len(suffix)] + 'es')
-        return None
-
-
-
-

@@ -1,4 +1,4 @@
-from grammar.basic import Word
+from basic import Word
 
 
 class Verb(Word):
@@ -9,11 +9,13 @@ class Verb(Word):
     """
 
     def __init__(self, word):
-       self.word = word
+        self.word = str(word)
 
-    @classmethod
-    def plural(tense, verb):
-        return tense.plural(verb)
+    def __str__(self):
+        return self.word
+
+    def __repr__(self):
+        return "%s('%s')" % (self.__class__.__name__, self.word)
 
 
 class ActionVerb(Verb):
@@ -52,7 +54,7 @@ class AuxiliaryVerb(Verb):
     def __init__(self, verb):
         if verb not in self.verbs:
             return VerbError()
-        return Verb(verb)
+        super(AuxiliaryVerb, self).__init__(verb)
 
 
 
@@ -95,15 +97,3 @@ class IrregularVerb(Verb):
 class VerbError(Exception):
     pass
 
-
-class PluralVerbRule(Rule):
-
-    suffixes = ['o', 'ch', 'sh', 'ss', 'x', 'z']
-
-    def rule(cls, verb):
-       cls.suffix_replace(suffixes, 'es')
-
-
-
-
-        

@@ -12,7 +12,8 @@ class State(object):
 
 class Tense(object):
 
-    aux_verb = None
+    auxiliary_verb = None
+    exceptions = {}
 
     def __init__(self):
         pass
@@ -21,21 +22,29 @@ class Tense(object):
         return self.verb
 
 
-
-class PresentSimple(object):
+class PresentSimpleTense(object):
 
     auxiliary_verb = AuxiliaryVerb('do')
+    exceptions = {
+        'have': 'has'
+    }
 
-    def third_person_verb(self):
-        if self.verb.endiwth('y'):
-            if not Vowel.is_vowel(self.verb[-2]):
-                self.verb = re.sub(self.verb, 'y$', 'ies')
-
-    def plural(self, verb):
-        for suffix in ['o', 'ch', 'sh', 'ss', 'x', 'z']:
-            if verb.word.lower().endswith(suffix):
-                return verb.__class__(verb.word[:-len(suffix)] + 'es')
-
+    def third_person_verb(self, verb):
+        _verb = str(verb)
+        if _verb in self.exceptions:
+            _verb = self.exceptions[_verb]
+        elif _verb.endswith('y'):
+            if not Vowel.is_vowel(_verb[-2]):
+                _verb = re.sub('y$', 'ies', _verb
+                               )
+            else:
+                _verb += 's'
+        else:
+            for suffix in ['o', 'ch', 'sh', 'ss', 'x', 'z']:
+                if _verb.lower().endswith(suffix):
+                    _verb += 'es'
+                    break
+        return verb.__class__(_verb)
 
 
 class PresentProgressive(object):
